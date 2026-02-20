@@ -8,9 +8,9 @@ export async function emptyAndRefillStatsDb() {
     const source = startConnectionPool('source_db')
     const stats = startConnectionPool('stats_db')
     await resetStatsDb({ stats })
-    await processReports({ source, stats })
     await processCompanyAccesses({ source, stats })
     await processCompanies({ source, stats })
+    await processReports({ source, stats })
     await processEvents({ source, stats })
     source.destroy()
     stats.destroy()
@@ -150,7 +150,7 @@ async function copyTableByBatches<RowRead, RowToInsert>(
       console.log(`Done with table ${table}`)
       break
     } else {
-      console.log(`Processing ${rows.length} rows of table ${table}`)
+      console.log(`Processing ${rows.length} rows of table ${table} with current offset ${offset}`)
       // transform each row, if needed
       const rowsTransformed = rows.map(transform)
       // insert into the target db
