@@ -1,5 +1,6 @@
 {
   "name": "statsrefill",
+  "version": "1.0.1",
   "packageManager": "yarn@3.2.3",
   "engines": {
     "node": "16.15.1"
