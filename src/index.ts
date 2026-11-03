@@ -3,13 +3,15 @@ import express, { Request, Response } from 'express'
 import cron from 'node-cron'
 import { checkWorkingOnStatsDb, conf } from './conf'
 import { emptyAndRefillStatsDb } from './core'
+import { buildInfo, health } from './health'
 
 const appName = 'StatsRefill'
 
 async function startServer() {
   const app = express()
+  // Health check, returns the deployed version
   app.get('/', (_, res: Response) => {
-    res.json({ message: `Hello ${appName}` })
+    res.json(health())
   })
   app.post('/launch', async (req: Request, res: Response) => {
     const authorizationHeader = req.headers.authorization ?? ''
@@ -21,7 +23,9 @@ async function startServer() {
     }
   })
   app.listen(conf.port, () => {
-    console.log(`${appName} app is running on port ${conf.port}`)
+    console.log(
+      `${appName} app v${buildInfo.version} (${buildInfo.gitCommit}) is running on port ${conf.port}`,
+    )
   })
 }
 
